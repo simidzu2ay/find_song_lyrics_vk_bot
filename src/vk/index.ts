@@ -1,11 +1,15 @@
 import { VK } from 'vk-io';
 import { Genius } from '../classes/genius.js';
+import { cfg } from '../config.js';
 
 const vk = new VK({
-    token: ''
+    token: cfg.vk.token
 });
 
 vk.updates.on('message_new', async context => {
+    if (context.isChat && !cfg.vk.allowIds.includes(context.senderId)) return;
+    if (context.isDM && !cfg.vk.allowIds.includes(context.peerId)) return;
+
     const commandMatch = context.text?.match(/\$song\s+(?<name>[^]+)/i);
 
     if (!commandMatch?.groups) return;

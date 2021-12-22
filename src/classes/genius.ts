@@ -46,10 +46,11 @@ export class Genius {
                     .replace(/<br\s*\/>/gi, '\n')
                     .replace(/(<a[^]+?>|<\/a>)/gi, '')
                     .replace(/(<span[^]+?>|<\/span>)/gi, '')
+                    .replace(/(<i[^]+?>|<\/i>)/gi, '')
             );
         }
 
-        return htmlDecode(songText.join());
+        return htmlDecode(songText.join(''));
     }
 
     static async fetchSong(name: string): Promise<GeniusSongs> {
@@ -73,6 +74,7 @@ export class Genius {
             title: song.title,
             // Idk why but api returns name with this symbol
             artist: song.artist_names.replace(new RegExp('​', 'gi'), ''),
+            // Genius.com already add / in song.path (/song-name) as example
             path: `${this.BASE_URL}${song.path}`
         };
     }
