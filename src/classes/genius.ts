@@ -41,16 +41,10 @@ export class Genius {
                 text: string;
             };
 
-            songText.push(
-                groups.text
-                    .replace(/<br\s*\/>/gi, '\n')
-                    .replace(/(<a[^]+?>|<\/a>)/gi, '')
-                    .replace(/(<span[^]+?>|<\/span>)/gi, '')
-                    .replace(/(<i[^]+?>|<\/i>)/gi, '')
-            );
+            songText.push(groups.text.replace(/<br\s*\/>/gi, '\n').replace(/(<[^]+?>|<\/[^]+?>)/gi, ''));
         }
 
-        return htmlDecode(songText.join(''));
+        return htmlDecode(songText.join('\n').replace(/\n+/, '\n'));
     }
 
     static async fetchSong(name: string): Promise<GeniusSongs> {

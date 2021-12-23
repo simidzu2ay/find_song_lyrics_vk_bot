@@ -16,21 +16,22 @@ vk.updates.on('message_new', async context => {
 
     try {
         const songInfo = await Genius.fetchSong(commandMatch.groups.name!);
-        const songLyrics = await Genius.parseLyrics(songInfo.path);
+        const songLyrics = `${songInfo.artist}\n${songInfo.path}\n\n` + (await Genius.parseLyrics(songInfo.path));
 
-        const match = songLyrics.match(/[^]{1,4000}/g) || [];
+        const match = songLyrics.match(/[^]{1,3900}/g) || [];
 
-        for (let i = 0; i < match.length; i++) {
-            const first = i === 0;
-            const text = match[i];
-
+        for (const text of match) {
             await context.reply({
-                message: first ? `${songInfo.artist}\n${songInfo.path}\n\n${text}` : text,
+                message: text,
                 dont_parse_links: 1,
                 disable_mentions: 1
             });
+
+            // ApiError 14 fix
+            await new Promise(r => setTimeout(r, 500));
         }
     } catch (e) {
+        console.log(e);
         await context.reply('Not found');
     }
 });
