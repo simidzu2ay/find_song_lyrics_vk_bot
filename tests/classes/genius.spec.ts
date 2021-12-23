@@ -1,4 +1,4 @@
-import { Genius } from '../../src/classes/genius';
+import { Genius } from '../../src/classes/Genius';
 
 describe('Genius static methods', () => {
     describe('fetchSong()', () => {

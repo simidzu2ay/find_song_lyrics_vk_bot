@@ -62,7 +62,7 @@ interface Response {
     sections: Section[];
 }
 
-export interface FetchSongResponse {
+export interface GeniusFetchSongResponse {
     meta: Meta;
     response: Response;
 }

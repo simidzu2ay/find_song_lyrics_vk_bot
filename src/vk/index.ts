@@ -1,5 +1,5 @@
 import { VK } from 'vk-io';
-import { Genius } from '../classes/genius.js';
+import { Genius } from '../classes/Genius.js';
 import { cfg } from '../config.js';
 
 const vk = new VK({
@@ -14,9 +14,11 @@ vk.updates.on('message_new', async context => {
 
     if (!commandMatch?.groups) return;
 
+    const parser = new Genius();
+
     try {
-        const songInfo = await Genius.fetchSong(commandMatch.groups.name!);
-        const songLyrics = `${songInfo.artist}\n${songInfo.path}\n\n` + (await Genius.parseLyrics(songInfo.path));
+        const songInfo = await parser.fetchSong(commandMatch.groups.name!);
+        const songLyrics = `${songInfo.artist}\n${songInfo.path}\n\n` + (await parser.parseLyrics(songInfo.path));
 
         const match = songLyrics.match(/[^]{1,3900}/g) || [];
 

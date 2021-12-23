@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start:vk": "node ./dist/vk/index.js",
+    "start:vk": "node --enable-source-maps ./dist/vk/index.js",
     "start:vk:dev": "NODE_ENV=development npm-run-all start:vk"
   },
   "keywords": [],
