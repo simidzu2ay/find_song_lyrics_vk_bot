@@ -7,8 +7,10 @@ const vk = new VK({
 });
 
 vk.updates.on('message_new', async context => {
-    if (context.isChat && !cfg.vk.allowIds.includes(context.senderId)) return;
-    if (context.isDM && !cfg.vk.allowIds.includes(context.peerId)) return;
+    if (cfg.vk.allowIds.length) {
+        if (context.isChat && !cfg.vk.allowIds.includes(context.senderId)) return;
+        if (context.isDM && !cfg.vk.allowIds.includes(context.peerId)) return;
+    }
 
     const commandMatch = context.text?.match(/\$song\s+(?<name>[^]+)/i);
 
