@@ -45,9 +45,12 @@ export class Genius implements GenericParser {
 
         if (!result) throw new Error(`Not found any songs by query ${name}`);
 
-        const song = result.response.sections.find(s => s.type === 'top_hit')?.hits[0]?.result;
+        const section = result.response.sections.find(s => s.type === 'top_hit')?.hits[0];
 
-        if (!song) throw new Error(`Not found any songs by query ${name}`);
+        if (!section) throw new Error(`Not found any songs by query ${name}`);
+        if (section.type !== 'song') throw new Error(`Not found any songs by query ${name}`);
+
+        const song = section.result;
 
         return {
             title: song.title,
