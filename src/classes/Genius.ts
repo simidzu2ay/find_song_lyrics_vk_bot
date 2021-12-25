@@ -1,6 +1,7 @@
 import { GeniusFetchSongResponse } from './types/GeniusFetchSong';
 import { FetchSongResponse, GenericParser } from './types/Generic';
 import { fetch } from '../fetch.js';
+import { SongSearchError } from '../errors/SongSearchError';
 
 const htmlDecode = (input: string): string => {
     return input
@@ -18,8 +19,7 @@ export class Genius implements GenericParser {
 
     async parseLyrics(path: string): Promise<string> {
         const response = await fetch(path);
-        // TODO
-        if (response.status !== 200) throw new Error(response.statusText);
+        if (!response.ok) throw new Error(response.statusText);
 
         const songText: string[] = [];
         const text = await response.text();
@@ -37,18 +37,16 @@ export class Genius implements GenericParser {
 
     async fetchSong(name: string): Promise<FetchSongResponse> {
         const response = await fetch(`${Genius.BASE_URL}/api/search/multi?per_page=5&q=${encodeURIComponent(name)}`);
-
-        // TODO: add a custom Error || handler
-        if (response.status !== 200) throw new Error(response.statusText);
+        if (!response.ok) throw new Error(response.statusText);
 
         const result = (await response.json()) as GeniusFetchSongResponse;
 
-        if (!result) throw new Error(`Not found any songs by query ${name}`);
+        if (!result) throw new SongSearchError(name);
 
         const section = result.response.sections.find(s => s.type === 'top_hit')?.hits[0];
 
-        if (!section) throw new Error(`Not found any songs by query ${name}`);
-        if (section.type !== 'song') throw new Error(`Not found any songs by query ${name}`);
+        if (!section) throw new SongSearchError(name);
+        if (section.type !== 'song') throw new SongSearchError(name);
 
         const song = section.result;
 

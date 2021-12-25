@@ -1,13 +1,14 @@
 import { FetchSongResponse, GenericParser } from './types/Generic';
 import { fetch } from '../fetch.js';
+import { SongSearchError } from '../errors/SongSearchError';
+import { SongParseError } from '../errors/SongParseError';
 
 export class TranslatedLyrics implements GenericParser {
     private static BASE_URL = 'https://translatedlyrics.ru';
 
     async fetchSong(name: string): Promise<FetchSongResponse> {
         const response = await fetch(`${TranslatedLyrics.BASE_URL}/search/?text=${encodeURIComponent(name)}`);
-
-        if (response.status !== 200) throw new Error(response.statusText);
+        if (!response.ok) throw new Error(response.statusText);
 
         const html = await response.text();
 
@@ -15,7 +16,7 @@ export class TranslatedLyrics implements GenericParser {
             /<div\s+id="search"[^]+?>[^]+?<li><a[^]+?href="(?<link>[^]+?)"[^]+?><b>(?<title>[^]+?)<\/b>\s+?\((?<artist>[^]+?)\)<\/a>[^]+?<\/li>[^]+?<\/div>/i
         );
 
-        if (!match?.groups) throw new Error(`Not found any songs by query ${name}`);
+        if (!match?.groups) throw new SongSearchError(name);
 
         const groups = match.groups as {
             link: string;
@@ -32,8 +33,7 @@ export class TranslatedLyrics implements GenericParser {
 
     async parseLyrics(path: string): Promise<string> {
         const response = await fetch(path);
-
-        if (response.status !== 200) throw new Error(response.statusText);
+        if (!response.ok) throw new Error(response.statusText);
 
         const text = await response.text();
 
@@ -41,7 +41,7 @@ export class TranslatedLyrics implements GenericParser {
             /<div\sclass="trlyrics"[^]+?>[^]+?<p>[^]+?<\/p>[^]+?<p>(?<text>[^]+?)<\/p>[^]+?<\/div>/i
         );
 
-        if (!match?.groups) throw new Error('TODO');
+        if (!match?.groups) new SongParseError();
 
         const groups = match?.groups as {
             text: string;

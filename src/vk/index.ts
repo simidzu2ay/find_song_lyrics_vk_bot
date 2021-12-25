@@ -1,6 +1,8 @@
 import { VK } from 'vk-io';
 import { Genius } from '../classes/Genius.js';
 import { cfg } from '../config.js';
+import { SongSearchError } from '../errors/SongSearchError';
+import { SongParseError } from '../errors/SongParseError';
 
 const vk = new VK({
     token: cfg.vk.token
@@ -35,8 +37,14 @@ vk.updates.on('message_new', async context => {
             await new Promise(r => setTimeout(r, 500));
         }
     } catch (e) {
-        console.log(e);
-        await context.reply('Not found');
+        if (e instanceof SongSearchError) {
+            await context.reply('Not found');
+        } else if (e instanceof SongParseError) {
+            await context.reply('Parsing error');
+        } else {
+            console.log(e);
+            await context.reply('Unknown error. Please check console for more info.');
+        }
     }
 });
 
