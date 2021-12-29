@@ -39,23 +39,25 @@ export class Genius implements GenericParser {
         const response = await fetch(`${Genius.BASE_URL}/api/search/multi?per_page=5&q=${encodeURIComponent(name)}`);
         if (!response.ok) throw new Error(response.statusText);
 
-        const result = (await response.json()) as GeniusFetchSongResponse;
+        const fetchResult = (await response.json()) as GeniusFetchSongResponse;
 
-        if (!result) throw new SongSearchError(name);
+        if (!fetchResult) throw new SongSearchError(name);
 
-        const section = result.response.sections.find(s => s.type === 'top_hit')?.hits[0];
+        const hits = fetchResult.response.sections.find(s => s.type === 'top_hit')?.hits;
+        if (!hits?.length) throw new SongSearchError(name);
 
-        if (!section) throw new SongSearchError(name);
-        if (section.type !== 'song') throw new SongSearchError(name);
+        for (const { result, type } of hits) {
+            if (type !== 'song') continue;
 
-        const song = section.result;
+            return {
+                title: result.title,
+                // Idk why but api returns name with this symbol
+                artist: result.artist_names.replace(new RegExp('​', 'gi'), ''),
+                // Genius.com already add / in song.path (/song-name) as example
+                path: `${Genius.BASE_URL}${result.path}`
+            };
+        }
 
-        return {
-            title: song.title,
-            // Idk why but api returns name with this symbol
-            artist: song.artist_names.replace(new RegExp('​', 'gi'), ''),
-            // Genius.com already add / in song.path (/song-name) as example
-            path: `${Genius.BASE_URL}${song.path}`
-        };
+        throw new SongSearchError(name);
     }
 }
