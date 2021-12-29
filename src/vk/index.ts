@@ -8,13 +8,15 @@ const vk = new VK({
     token: cfg.vk.token
 });
 
+const songCommandRegEx = new RegExp(`\\${cfg.vk.prefix}song\\s+(?<name>[^]+)`, 'i');
+
 vk.updates.on('message_new', async context => {
     if (cfg.vk.allowIds.length) {
         if (context.isChat && !cfg.vk.allowIds.includes(context.senderId)) return;
         if (context.isDM && !cfg.vk.allowIds.includes(context.peerId)) return;
     }
 
-    const commandMatch = context.text?.match(/\$song\s+(?<name>[^]+)/i);
+    const commandMatch = context.text?.match(songCommandRegEx);
 
     if (!commandMatch?.groups) return;
 

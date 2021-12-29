@@ -5,6 +5,7 @@ interface Config {
     vk: {
         token: string;
         allowIds: number[];
+        prefix: string;
     };
 }
 
