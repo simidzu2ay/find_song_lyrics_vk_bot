@@ -2,8 +2,7 @@
   "name": "genius_lirycs_parse",
   "version": "1.0.0",
   "description": "",
-  "exports": "./dist/index.js",
-  "type": "module",
+  "main": "./dist/index.js",
   "engines": {
     "node": "^12.20.0 || >=14.13.1"
   },

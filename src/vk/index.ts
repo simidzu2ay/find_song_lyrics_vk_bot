@@ -1,6 +1,6 @@
 import { VK } from 'vk-io';
-import { Genius } from '../classes/Genius.js';
-import { cfg } from '../config.js';
+import { Genius } from '../classes/Genius';
+import { cfg } from '../config';
 import { SongSearchError } from '../errors/SongSearchError';
 import { SongParseError } from '../errors/SongParseError';
 

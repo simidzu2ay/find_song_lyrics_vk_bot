@@ -1,8 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { join as pathJoin, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { readFileSync } from 'fs';
+import { join as pathJoin } from 'path';
 
 interface Config {
     vk: {

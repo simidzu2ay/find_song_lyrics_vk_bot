@@ -1,6 +1,6 @@
 import { GeniusFetchSongResponse } from './types/GeniusFetchSong';
 import { FetchSongResponse, GenericParser } from './types/Generic';
-import { fetch } from '../fetch.js';
+import { fetch } from '../fetch';
 import { SongSearchError } from '../errors/SongSearchError';
 
 const htmlDecode = (input: string): string => {

@@ -1,5 +1,5 @@
 import { FetchSongResponse, GenericParser } from './types/Generic';
-import { fetch } from '../fetch.js';
+import { fetch } from '../fetch';
 import { SongSearchError } from '../errors/SongSearchError';
 import { SongParseError } from '../errors/SongParseError';
 
