@@ -12,7 +12,7 @@ describe('Genius static methods', () => {
         });
 
         it('should throw an error', async () => {
-            expect(await genius.fetchSong('arshranrhltrjtdanesttttttd')).toThrow();
+            await expect(genius.fetchSong('arshranrhltrjtdanesttttttd')).rejects.toThrow();
         });
     });
 
